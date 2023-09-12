@@ -25,7 +25,7 @@
      ![Screenshot mongoDB](../Laprak1/9.png) <br>
      
 * ## Percobaan Instalasi Lumen
-  Pada percobaan ini, Instalasi Lumen dilakukan menggunakan tools Visual Studio Code dengan cara berikut:
+  Pada percobaan ini, Instalasi Lumen dilakukan menggunakan tools Visual Studio Code dengan cara berikut: <br>
   a. Buka folder yang telah dibuat pada Visual Studio Code <br>
   b. Buka file web.php pada direktori routes dan buat endpoint baru dengan kode sebagai berikut <br>
   > $router->get('/key', function () {
