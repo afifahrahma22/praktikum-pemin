@@ -25,4 +25,21 @@
      ![Screenshot mongoDB](../Laprak1/9.png) <br>
      
 * ## Percobaan Instalasi Lumen
+  Pada percobaan ini, Instalasi Lumen dilakukan menggunakan tools Visual Studio Code dengan cara berikut:
+  a. Buka folder yang telah dibuat pada Visual Studio Code <br>
+  b. Buka file web.php pada direktori routes dan buat endpoint baru dengan kode sebagai berikut <br>
+  > $router->get('/key', function () {
+    return Str::random(32);
+    }); <br>
+  >
+    ![Screenshot lumen](../Laprak1/web.PNG) <br>
+  c. Jalankan server dengan perintah <br>
+  > php -S localhost:8000 -t public <br>
+  >
+    ![Screenshot lumen](../Laprak1/php.png) <br>
+  d. Buka browser dan jalankan "localhost:8000" untuk mengecek apakah lumen telah terinstall <br>
+  e. Untuk mendapat app key buka browser dan jalankan "localhost:8000/key" <br>
+    ![Screenshot lumen](../Laprak1/app_key.PNG) <br>
+  f. Copy app key yang didapat pada file .env pada projek lumenapi <br>
+    ![Screenshot lumen](../Laprak1/input_app_key.png) <br>
 
