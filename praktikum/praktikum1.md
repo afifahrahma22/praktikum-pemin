@@ -2,7 +2,7 @@
 
 * ## Percobaan Instalasi Composer
   Instalasi composer bisa dilakukan dengan cara membuka halaman https://getcomposer.org/download/ dan menjalankan Composer-Setup.exe. Namun dalam percobaan ini, composer telah terinstall sehingga langkah ini dilewati. <br>
-  ![Screenshot composer](../Laprak1/composer.PNG)
+  ![Screenshot composer](../Laprak1/composer.png)
   
 * ## Percobaan Instalasi MongoDB
   Instalasi MongoDB dilakukan dengan cara mendownload MongoDB pada halaman https://www.mongodb.com/try/download/community. Setelah itu, jalankan file mongodb-windows-x86_64-7.0.1-signed.msi dan ikuti langkah-langkah berikut: <br>
@@ -19,10 +19,10 @@
   f. Klik "Install" <br>
      ![Screenshot mongoDB](../Laprak1/6.PNG) <br>
   g. Tunggu hingga tahap instalasi selesai <br>
-     ![Screenshot mongoDB](../Laprak1/7.PNG) <br>
+     ![Screenshot mongoDB](../Laprak1/7.png) <br>
   h. MongoDB Compass akan terbuka secara otomatis <br>
-     ![Screenshot mongoDB](../Laprak1/8.PNG) <br>
-     ![Screenshot mongoDB](../Laprak1/9.PNG) <br>
+     ![Screenshot mongoDB](../Laprak1/8.png) <br>
+     ![Screenshot mongoDB](../Laprak1/9.png) <br>
      
 * ## Percobaan Instalasi Lumen
 
