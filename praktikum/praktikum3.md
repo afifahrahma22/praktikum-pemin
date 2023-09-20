@@ -16,6 +16,15 @@
   c. Lakukan instalasi express, mongoose, dan dotenv dengan menggunakan command ```npm i express mongoose dotenv``` <br>
   
 * ## Koneksi Express ke MongoDB
+  a. Buatlah file **index.js** pada root folder <br>
+  b. Masukkan kode berikut pada file **index.js** <br>
+  c. Setelah itu coba jalankan dengan command ```node index.js``` <br>
+  > [!NOTE]
+  > Lakukan langkah ini untuk melakukan restart server node setiap kali melakukan perubahan pada file
+  > 
+  d. Lakukan pembuatan file **.env** dan masukkan baris berikut <br>
+  e. 
+  
 * ## Pembuatan Routing
 * ## Pembuatan Controller
 * ## Pembuatan Model
