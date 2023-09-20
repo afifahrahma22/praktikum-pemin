@@ -245,5 +245,199 @@ module.exports = router;
   g. Lakukan pengujian kembali, pastikan response tetap sama <br>
   
 * ## Pembuatan Model
-* ## Operasi CRUD
+  Model berfungsi untuk menyiapkan, mengatur, memanipulasi, dan mengorganisasikan data yang ada pada database. <br>
 
+  Model dapat dibuat dengan cara: <br>
+  a. Lakukan pembuatan direktori **models** di tingkat yang sama dengan index.js <br>
+  b. Buat file **book.model.js** di dalamnya <br>
+  c. Tambahkan baris kode berikut <br>
+  ```
+  const mongoose = require('mongoose');
+  
+  const bookSchema = new mongoose.Schema({
+    title: {
+      type: String
+    },
+    author: {
+      type: String
+    },
+    year: {
+      type: Number
+    },
+    pages: {
+      type: Number
+    },
+    summary: {
+      type: String
+    },
+    publisher: {
+      type: String
+    }
+  })
+  
+  module.exports = mongoose.model('book', bookSchema);
+  ```
+  
+* ## Operasi CRUD
+  a. Hapus semua data pada collection books yang telah dibuat pada praktikum sebelumnya ( https://afifahrahma22.github.io/praktikum-pemin/praktikum/praktikum2 ) <br>
+  b. Lakukan import book.model.js pada file book.controller.js <br>
+  ```
+  const Book = require('../models/book.model');
+  
+  ...
+  ```
+    c. Lakukan perubahan pada fungsi ```createBook``` <br>
+  ```
+  const Book = require('../models/book.model');
+  
+  ...
+  
+  async function createBook(req, res) {
+    const book = new Book({
+      title: req.body.title,
+      author: req.body.author,
+      year: req.body.year,
+      pages: req.body.pages,
+      summary: req.body.summary,
+      publisher: req.body.publisher,
+    })
+
+    try {
+      const savedBook = await book.save();
+      res.status(200).json({
+        message: 'membuat buku baru',
+        book: savedBook,
+      })
+    } catch (error) {
+      res.status(500).json({
+        message: 'kesalahan pada server',
+        error: error.message,
+      })
+    }
+  }
+  
+  ...
+  ```
+    d. Buatlah dua buah buku dengan data di bawah ini dengan Postman <br>
+  ```
+    {
+      "title": "Dilan 1990",
+      "author": "Pidi Baiq",
+      "year": 2014,
+      "pages": 332,
+      "summary": "Mirea, anata wa utsukushī",
+      "publisher": "Pastel Books"
+    }
+  ```
+  ```
+    {
+      "title": "Dilan 1991",
+      "author": "Pidi Baiq",
+      "year": 2015,
+      "pages": 344,
+      "summary": "Watashi ga kare o aishite iru to ittara",
+      "publisher": "Pastel Books"
+    }
+  ```
+    e. Lakukan perubahan pada fungsi ```getAllBooks``` <br>
+  ```
+    const Book = require('../models/book.model');
+  
+    async function getAllBooks(req, res) {
+      try {
+        const books = await Book.find();
+        res.status(200).json({
+          message: 'mendapatkan semua buku',
+          books,
+        })
+      } catch (error) {
+        res.status(500).json({
+          message: 'kesalahan pada server',
+          error: error.message,
+        })
+      }
+    }
+  
+    ...
+  ```
+    f. Lakukan perubahan pada fungsi ```getOneBook``` <br>
+  ```
+    const Book = require('../models/book.model');
+  
+    ...
+  
+    async function getOneBook(req, res) {
+      const id = req.params.id;
+  
+      try {
+        const book = await Book.findById(id);
+        res.status(200).json({
+          message: 'mendapatkan satu buku',
+          book,
+        })
+      } catch (error) {
+        res.status(500).json({
+          message: 'kesalahan pada server',
+          error: error.message,
+        })
+      }
+    }
+  
+    ...
+  ```
+    g. Tampilkan semua buku dengan Postman <br>
+    h. Tampilkan buku Dilan 1990 dengan Postman <br>
+    i. Lakukan perubahan pada fungsi ```updateBook``` <br>
+  ```
+    const Book = require('../models/book.model');
+  
+    ...
+  
+    async function updateBook(req, res) {
+      const id = req.params.id;
+  
+      try {
+        const book = await Book.findByIdAndUpdate(
+          id, req.body, { new: true }
+        )
+        res.status(200).json({
+          message: 'memperbaharui satu buku',
+          book,
+        })
+      } catch (error) {
+        res.status(500).json({
+          message: 'kesalahan pada server',
+          error: error.message,
+        })
+      }
+    }
+  
+    ...
+  ```
+    j. Ubah judul buku Dilan 1991 menjadi “NAMA PANGGILAN 1991” dengan Postman <br>
+    k. Lakukan perubahan pada fungsi ```deleteBook``` <br>
+  ```
+    const Book = require('../models/book.model');
+  
+    ...
+  
+    async function deleteBook(req, res) {
+      const id = req.params.id;
+  
+      try {
+        const book = await Book.findByIdAndDelete(id);
+        res.status(200).json({
+          message: 'menghapus satu buku',
+          book,
+        })
+      } catch (error) {
+        res.status(500).json({
+          message: 'kesalahan pada server',
+          error: error.message,
+        })
+      }
+    }
+  
+    ...
+  ```
+    l. Hapus buku Dilan 1990 dengan Postman <br>
