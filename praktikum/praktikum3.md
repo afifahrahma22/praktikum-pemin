@@ -18,12 +18,67 @@
 * ## Koneksi Express ke MongoDB
   a. Buatlah file **index.js** pada root folder <br>
   b. Masukkan kode berikut pada file **index.js** <br>
+ ```
+  require('dotenv').config();
+  const express = require('express');
+  const mongoose = require('mongoose');
+
+  const app = express();
+
+  app.use(express.json());
+
+  app.get('/', (req, res) => {
+    res.status(200).json({
+      message: '<nama>,<nim>'
+    })
+  })
+
+  const PORT = 8000;
+  app.listen(PORT, () => {
+    console.log(`Running on port ${PORT}`);
+  })
+ ```
   c. Setelah itu coba jalankan dengan command ```node index.js``` <br>
   > [!NOTE]
   > Lakukan langkah ini untuk melakukan restart server node setiap kali melakukan perubahan pada file
   > 
   d. Lakukan pembuatan file **.env** dan masukkan baris berikut <br>
-  e. 
+  ```
+  PORT=5000
+  ```
+  e. Ubah kode pada listening port menjadi berikut dan coba jalankan aplikasi kembali <br>
+  ```
+  ...
+
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => {
+    console.log(`Running on port ${PORT}`);
+  })
+  ```
+  f. Copy connection string yang terdapat pada compas atau atlas dan paste kan pada **.env** seperti berikut <br>
+  ```
+  MONGO_URI=<Connection string masing-masing>
+  ```
+  g. Tambahkan baris kode berikut pada file **index.js** <br>
+  ```
+  require('dotenv').config();
+  const express = require('express');
+  const mongoose = require('mongoose');
+
+  mongoose.connect(process.env.MONGO_URI);
+  const db = mongoose.connection;
+
+  db.on('error', (error) => {
+    console.log(error);
+  });
+
+  db.once('connected', () => {
+    console.log('Mongo connected');
+  })
+
+  ...
+  ```
+  h. Jalankan aplikasi kembali seperti langkah c <br>
   
 * ## Pembuatan Routing
 * ## Pembuatan Controller
