@@ -10,6 +10,8 @@ syntax berikut,<br>
     return 'User Id = ' . $id;
   });
 ```
+![Screenshot dynamic route](../Laprak5/1.PNG) <br>
+
   Saat menambahkan parameter pada routes, kita tidak terbatas pada 1 variable saja, namun
 kita dapat menambahkan sebanyak yang diperlukan seperti kode berikut,<br>
 ```
@@ -17,6 +19,8 @@ kita dapat menambahkan sebanyak yang diperlukan seperti kode berikut,<br>
     return 'Post ID = ' . $postId . ' Comments ID = ' . $commentId;
   });
 ```
+![Screenshot dynamic route](../Laprak5/2.PNG) <br>
+
   Pada dynamic routes kita juga bisa menambahkan optional routes, yang mana optional
 routes tidak mengharuskan kita untuk memberi variable pada endpoint kita, namun saat kita
 memanggil endpoint, dapat menggunakan parameter variable ataupun tidak, seperti pada
@@ -26,6 +30,8 @@ kode dibawah ini,<br>
     return $userId === null ? 'Data semua users' : 'Data user dengan id ' . $userId;
   });
 ```
+![Screenshot dynamic route](../Laprak5/3.PNG) <br>
+![Screenshot dynamic route](../Laprak5/4.PNG) <br>
 
 ## 2. Aliases Route
   Aliases Route digunakan untuk memberi nama pada route yang telah kita buat, hal ini dapat
@@ -43,6 +49,8 @@ untuk menambahkan aliases route<br>
       }
   });
 ```
+![Screenshot aliases route](../Laprak5/5.PNG) <br>
+![Screenshot aliases route](../Laprak5/6.PNG) <br>
 
 ## 3. Group Route
   Pada lumen, kita juga dapat memberikan grouping pada routes kita agar lebih mudah pada
@@ -55,6 +63,8 @@ menggunakan syntax berikut,<br>
     });
   });
 ```
+![Screenshot group route](../Laprak5/7.PNG) <br>
+
   Selain dapat mengelompokkan prefix, kita juga dapat mengelompokkan middleware dan
 namespace pada kelompok routes kita.<br>
 
@@ -85,6 +95,8 @@ namespace pada kelompok routes kita.<br>
         }
     }
 ```
+![Screenshot middleware](../Laprak5/8.PNG) <br>
+
   Kemudian, setelah menambahkan filter pada ```AgeMiddleware```, kita harus mendaftarkan ```AgeMiddleware``` pada aplikasi kita, pada file ```bootstrap/app.php``` seperti berikut ini,<br>
 ```
   73 ...
@@ -100,6 +112,8 @@ namespace pada kelompok routes kita.<br>
   83
   84 ...
 ```
+![Screenshot middleware](../Laprak5/9.PNG) <br>
+
   Pada baris 65 terdapat comment mengenai proses mendaftarkan suatu middleware dalam aplikasi kita. Untuk menambahkan middleware pada aplikasi kita, kita dapat men-uncomment baris 75 hingga 77, kemudian menambahkan age middleware ke dalamnya.<br>
 
   Namun, karena kita hanya ingin menambahkan middleware pada route tertentu, kita akan menghapus comment pada baris 79 hingga 81, kemudian menambahkan middleware age di dalamnya.<br>
@@ -114,3 +128,5 @@ namespace pada kelompok routes kita.<br>
       return 'Dibawah umur';
   });
 ```
+![Screenshot middleware](../Laprak5/10.PNG) <br>
+![Screenshot middleware](../Laprak5/11.PNG) <br>
