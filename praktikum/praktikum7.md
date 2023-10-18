@@ -505,3 +505,8 @@
   <tb>12. Tambahkan tag **“lagu”** pada postingan **“tanpamu apa artinya”** <br>
   <tb>13. Tampilkan post pertama<br>
   <tb>14. Tampilkan post kedua<br>
+  > [!NOTE]
+  > Tag "jadul" yang berada pada dua post menunjukkan **satu** tag dapat berada di **banyak** post
+
+  > [!NOTE]
+  > Post "tanpamu apa artinya" yang memiliki dua tag menunjukkan **satu** post dapat memiliki banyak **tag**
