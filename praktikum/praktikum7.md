@@ -372,17 +372,136 @@
   <tb>8. Tampilkan post menggunakan Postman<br>
   
 * ## Relasi Many-to-Many
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
-  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Tambahkan fungsi ```tags()``` pada file ```Post.php```<br>
+  ```
+    <?php
+    namespace App\Models;
+  
+    use Illuminate\Database\Eloquent\Model;
+
+    class Post extends Model
+    {
+      ...
+      public function tags()
+      {
+        return $this->belongsToMany(Tag::class, 'post_tag', 'postId', 'tagId');
+      }
+    }
+  ```
+  <tb>2. Tambahkan fungsi ```posts()``` pada file ```Tag.php```<br>
+  ```
+    <?php
+    namespace App\Models;
+  
+    use Illuminate\Database\Eloquent\Model;
+  
+    class Tag extends Model
+    {
+      ...
+      public function posts()
+      {
+        return $this->belongsToMany(Post::class, 'post_tag', 'tagId', 'postId');
+      }
+    }
+  ```
+  <tb>3. Buatlah file ```TagController.php``` dan isilah dengan baris kode berikut<br>
+  ```
+    <?php
+    namespace App\Http\Controllers;
+  
+    use App\Models\Tag;
+    use Illuminate\Http\Request;
+  
+    class TagController extends Controller
+    {
+      /**
+      * Create a new controller instance.
+      *
+      * @return void
+      */
+      public function __construct()
+      {
+        //
+      }
+
+      //
+      public function createTag(Request $request)
+      {
+        $tag = Tag::create([
+          'name' => $request->name
+        ]);
+  
+        return response()->json([
+          'success' => true,
+          'message' => 'New tag created',
+          'data' => [
+            'tag' => $tag
+          ]
+        ]);
+      }
+    }
+  ```
+  <tb>4. Tambahkan fungsi ```addTag``` dan response tags pada ```PostController.php```<br>
+  ```
+    <?php
+    namespace App\Http\Controllers;
+  
+    use App\Models\Post;
+    use Illuminate\Http\Request;
+  
+    class PostController extends Controller
+    {
+      ...
+      public function getPostById(Request $request)
+      {
+        $post = Post::find($request->id);
+  
+        return response()->json([
+          'success' => true,
+          'message' => 'All post grabbed',
+          'data' => [
+            'post' => [
+              'id' => $post->id,
+              'content' => $post->content,
+              'comments' => $post->comments,
+              'tags' => $post->tags, //response tags
+            ]
+          ]
+        ]);
+      }
+
+      public function addTag(Request $request)
+      {
+        $post = Post::find($request->id);
+  
+        $post->tags()->attach($request->tagId);
+  
+        return response()->json([
+          'success' => true,
+          'message' => 'Tag added to post',
+        ]);
+      }
+    }
+  ```
+  <tb>5. Tambahkan baris berikut pada ```routes/web.php```<br>
+  ```
+    $router->group(['prefix' => 'posts'], function () use ($router) {
+      $router->post('/', ['uses' => 'PostController@createPost']);
+      $router->get('/{id}', ['uses' => 'PostController@getPostById']);
+      $router->put('/{id}/tag/{tagId}', ['uses' => 'PostController@getPostById']); //
+    });
+  
+    ...
+    $router->group(['prefix' => 'tags'], function () use ($router) {
+      $router->post('/', ['uses' => 'TagController@createTag']);
+    });
+  ```
+  <tb>6. Buatlah satu tag menggunakan Postman<br>
+  <tb>7. Tambahkan tag **“jadul”** pada post **“disana engkau berdua”** <br>
+  <tb>8. Tampilkan post **“disana engkau berdua”** menggunakan Postman<br>
+  <tb>9. Buatlah postingan **“tanpamu apa artinya”** menggunakan Postman<br>
+  <tb>10. Tambahkan tag **“jadul”** pada postingan **“tanpamu apa artinya”** <br>
+  <tb>11. Buatlah tag **“lagu”** menggunakan Postman<br>
+  <tb>12. Tambahkan tag **“lagu”** pada postingan **“tanpamu apa artinya”** <br>
+  <tb>13. Tampilkan post pertama<br>
+  <tb>14. Tampilkan post kedua<br>
