@@ -81,10 +81,308 @@
   ```
   <tb>7. Ubah fungsi ```up()``` pada file ```create_tags_table```<br>
   ```
+    #sebelumnya
+    ...
+    public function up()
+    {
+      Schema::create('tags', function (Blueprint $table) {
+        $table->id();
+        $table->timestamps();
+      });
+    }
+
+    #diubah menjadi
+    ...
+    public function up()
+    {
+      Schema::create('tags', function (Blueprint $table) {
+        $table->id();
+        $table->timestamps();
+        $table->string('name');
+      });
+    }
+    ...
   ```
   <tb>8. Ubah fungsi ```up()``` pada file ```create_post_tag_table```<br>
   ```
+    #sebelumnya
+    ...
+    public function up()
+    {
+      Schema::create('post_tag', function (Blueprint $table) {
+        $table->id();
+        $table->timestamps();
+      });
+    }
+    ...
+  
+    #diubah menjadi
+    ...
+    public function up()
+    {
+      Schema::create('post_tag', function (Blueprint $table) {
+        $table->id();
+        $table->timestamps();
+        $table->foreignId('postId')->unsigned();
+        $table->foreignId('tagId')->unsigned();
+      });
+    }
+    ...
   ```
+  <tb>9. Jalankan command berikut<br>
+  ```
+    php artisan migrate
+  ```
+  
 * ## Pembuatan Model
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  ```
+    <?php
+    namespace App\Models;
+  
+    use Illuminate\Database\Eloquent\Model;
+  
+    class Post extends Model
+    {
+      /**
+      * The attributes that are mass assignable.
+      *
+      * @var string[]
+      */
+      protected $fillable = [
+        'content'
+      ];
+  
+      /**
+      * The attributes excluded from the model's JSON form.
+      *
+      * @var string[]
+      */
+      protected $hidden = [];
+    }
+  ```
+  <tb>2. Buatlah file dengan nama ```Comment.php``` dan isi dengan baris kode berikut<br>
+  ```
+    <?php
+    namespace App\Models;
+  
+    use Illuminate\Database\Eloquent\Model;
+  
+    class Comment extends Model
+    {
+      /**
+      * The attributes that are mass assignable.
+      *
+      * @var string[]
+      */
+      protected $fillable = [
+        'review'
+      ];
+
+      /**
+      * The attributes excluded from the model's JSON form.
+      *
+      * @var string[]
+      */
+      protected $hidden = [];
+    }
+  ```
+  <tb>3. Buatlah file dengan nama ```Tag.php``` dan isi dengan baris kode berikut<br>
+  ```
+    <?php
+    namespace App\Models;
+  
+    use Illuminate\Database\Eloquent\Model;
+  
+    class Tag extends Model
+    {
+      /**
+      * The attributes that are mass assignable.
+      *
+      * @var string[]
+      */
+      protected $fillable = [
+        'name'
+      ];
+  
+      /**
+      * The attributes excluded from the model's JSON form.
+      *
+      * @var string[]
+      */
+      protected $hidden = [];
+    }
+      ```
+  
 * ## Relasi One-to-Many
+  <tb>1. Tambahkan fungsi ```comments()``` pada file ```Post.php```<br>
+  ```
+    <?php
+    namespace App\Models;
+  
+    use Illuminate\Database\Eloquent\Model;
+  
+    class Post extends Model
+    {
+      ...
+      // fungsi comments
+      public function comments()
+      {
+        return $this->hasMany(Comment::class, 'postId');
+      }
+    }
+  ```
+  <tb>2. Tambahkan fungsi ```post()``` dan atribut postId pada ```$fillable``` pada file ```Comment.php```<br>
+  ```
+    <?php
+    namespace App\Models;
+  
+    use Illuminate\Database\Eloquent\Model;
+  
+    class Comment extends Model
+    {
+      ...
+  
+      protected $fillable = [
+        'review',
+        'postId' // atribut postId
+      ];
+  
+      /**
+      * The attributes excluded from the model's JSON form.
+      *
+      * @var string[]
+      */
+      protected $hidden = [];
+  
+      public function post()
+      {
+        return $this->belongsTo(Post::class, 'postId');
+      }
+    }
+  ```
+  <tb>3. Buatlah file ```PostController.php``` dan isilah dengan baris kode berikut<br>
+  ```
+    <?php
+    namespace App\Http\Controllers;
+  
+    use App\Models\Post;
+    use Illuminate\Http\Request;
+
+    class PostController extends Controller
+    {
+      /**
+      * Create a new controller instance.
+      *
+      * @return void
+      */
+      public function __construct()
+      {
+        //
+      }
+  
+      //
+      public function createPost(Request $request)
+      {
+        $post = Post::create([
+          'content' => $request->content,
+        ]);
+  
+        return response()->json([
+          'success' => true,
+          'message' => 'New post created',
+          'data' => [
+            'post' => $post
+          ]
+        ]);
+      }
+  
+      public function getPostById(Request $request)
+      {
+        $post = Post::find($request->id);
+  
+        return response()->json([
+          'success' => true,
+          'message' => 'All post grabbed',
+          'data' => [
+            'post' => [
+              'id' => $post->id,
+              'content' => $post->content,
+              'comments' => $post->comments,
+            ]
+          ]
+        ]);
+      }
+    }
+  ```
+  <tb>4. Buatlah file ```CommentController.php``` dan isilah dengan baris kode berikut<br>
+  ```
+    <?php
+  
+    namespace App\Http\Controllers;
+
+    use App\Models\Comment;
+    use Illuminate\Http\Request;
+  
+    class CommentController extends Controller
+    {
+      /**
+      * Create a new controller instance.
+      *
+      * @return void
+      */
+      public function __construct()
+      {
+        //
+      }
+  
+      //
+      public function createComment(Request $request)
+      {
+        $comment = Comment::create([
+          'review' => $request->review,
+          'postId' => $request->postId,
+        ]);
+  
+        return response()->json([
+          'success' => true,
+          'message' => 'New comment created',
+          'data' => [
+            'comment' => $comment
+          ]
+        ]);
+      }
+    }
+  ```
+  <tb>5. Tambahkan baris berikut pada ```routes/web.php```<br>
+  ```
+    <?php
+    ...
+    $router->group(['prefix' => 'posts'], function () use ($router) {
+      $router->post('/', ['uses' => 'PostController@createPost']);
+      $router->get('/{id}', ['uses' => 'PostController@getPostById']);
+    });
+  
+    $router->group(['prefix' => 'comments'], function () use ($router) {
+      $router->post('/', ['uses' => 'CommentController@createComment']);
+    });
+  ```
+  <tb>6. Buatlah satu post menggunakan Postman<br>
+  <tb>7. Buatlah satu comment menggunakan Postman<br>
+  <tb>8. Tampilkan post menggunakan Postman<br>
+  
 * ## Relasi Many-to-Many
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
+  <tb>1. Buatlah file dengan nama ```Post.php``` dan isi dengan baris kode berikut<br>
