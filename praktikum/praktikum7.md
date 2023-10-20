@@ -1,6 +1,13 @@
 # Relasi One-to-Many dan Many-to-Many
 
 * ## Pembuatan Tabel
+  Tabel yang digunakan adalah sebagai berikut<br>
+
+  posts | comments | tags | post_tag |
+  --- | --- | --- | --- |
+  id | id | id | postId |
+  content (STRING) | review (STRING) | name | tagId |
+
   <tb>1. Pastikan server database aktif kemudian pastikan sudah membuat database dengan nama ```lumenpost```<br>
   <tb>2. Ubah konfigurasi database pada file ```.env``` menjadi<br>
   ```
