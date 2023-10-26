@@ -10,6 +10,7 @@
   email |
   password |
 
+![Screenshot register](../Laprak8/1.PNG) <br>
   <tb>2. Pastikan terdapat model ```User.php``` yang digunakan pada bab 5 ___Model, Controller, dan Request-Response Handler___. Berikut baris kode yang harus ada <br>
   ```
     <?php
@@ -38,7 +39,8 @@
         protected $hidden = [];
     }
   ```
-
+  ![Screenshot register](../Laprak8/2.PNG) <br>
+  
   <tb>3. Buatlah file ```AuthController.php``` dan isilah dengan baris kode berikut <br>
   ```
     <?php
@@ -83,6 +85,7 @@
         }
       }
   ```
+  ![Screenshot register](../Laprak8/3.PNG) <br>
   <tb>4. Tambahkan baris berikut pada ```routes/web.php``` <br>
   ```
     <?php
@@ -91,6 +94,7 @@
       $router->post('/register', ['uses'=> 'AuthController@register']);
     });
   ```
+  ![Screenshot register](../Laprak8/4.PNG) <br>
   <tb>5. Jalankan aplikasi pada endpoint ```/auth/register``` dengan body berikut <br>
   ```
     {
@@ -99,9 +103,12 @@
       "password": "wanderer"
     }
   ```
+  ![Screenshot register](../Laprak8/5.PNG) <br>
+  **Hasil pada PHPMyAdmin**<br>
+  ![Screenshot register](../Laprak8/6.PNG) <br>
   
 * ## Authentication
-  Otentifikasi adalah proses untuk mengenali identitas dengan mekanisme pengasosiasian permintaan yang masuk dengan satu set kredensial pengidentifikasi. Kredensial yang diberikan akan dibandingkan dengan database informasi pengguna yang berwenang di dalam sistem operasi lokal atau server otentifikasi. <br>
+  Otentifikasi adalah proses untuk mengenali identitas dengan mekanisme pengasosiasian permintaan yang masuk dengan satu set kredensial pengidentifikasi. Kredensial yang diberikan akan dibandingkan dengan database informasi pengguna yang berwenang di dalam sistem operasi lokal atau server otentifikasi. <br><br>
   <tb>1. Buatlah fungsi ```login(Request $request)``` pada file ```AuthController.php``` <br>
   ```
     <?php
@@ -145,6 +152,8 @@
         }
     }
   ```
+  ![Screenshot authentication](../Laprak8/7.PNG) <br>
+  
   <tb>2. Tambahkan baris berikut pada ```routes/web.php``` <br>
   ```
     <?php
@@ -154,6 +163,8 @@
       $router->post('/login', ['uses'=> 'AuthController@login']); // route login
     });
   ```
+  ![Screenshot authentication](../Laprak8/8.PNG) <br>
+  
   <tb>3. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut <br>
   ```
     {
@@ -161,15 +172,24 @@
       "password": "wanderer"
     }
   ```
+  ![Screenshot authentication](../Laprak8/9.PNG) <br>
+  
   > [!NOTE]
   > Opsional: lakukan percobaan dengan menyalahkan email dan password dan amati responnya
+
+  **Hasil ketika password salah**<br>
+  ![Screenshot authentication](../Laprak8/10.PNG) <br>
+  **Hasil ketika email salah**<br>
+  ![Screenshot authentication](../Laprak8/11.PNG) <br>
   
 * ## Token
-  Token merupakan nilai yang digunakan untuk mendapatkan akses ke sumber daya yang dibatasi secara elektronik. Penggunaan token ditujukan pada web service yang tidak menyimpan state yang berkaitan dengan penggunaan aplikasi (stateless) seperti session. <br>
+  Token merupakan nilai yang digunakan untuk mendapatkan akses ke sumber daya yang dibatasi secara elektronik. Penggunaan token ditujukan pada web service yang tidak menyimpan state yang berkaitan dengan penggunaan aplikasi (stateless) seperti session. <br><br>
   <tb>1. Jalankan perintah berikut untuk membuat migrasi baru <br>
   ```
     php artisan make:migration add_column_token_to_users
   ```
+  ![Screenshot token](../Laprak8/12.PNG) <br>
+  
   <tb>2. Tambahkan baris berikut pada migration yang baru terbuat <br>
   ```
     <?php
@@ -206,6 +226,8 @@
       }
 
   ```
+  ![Screenshot token](../Laprak8/13.PNG) <br>
+  
   <tb>3. Tambahkan atribut token di ```$fillable``` pada ```User.php``` <br>
   ```
     <?php
@@ -235,6 +257,8 @@
         protected $hidden = [];
     }
   ```
+  ![Screenshot token](../Laprak8/14.PNG) <br>
+  
   <tb>4. Tambahkan baris berikut pada file ```AuthController.php``` <br>
   ```
     <?php
@@ -312,10 +336,14 @@
         }
     }
   ```
+  ![Screenshot token](../Laprak8/15.PNG) <br>
+  
   <tb>5. Jalankan perintah di bawah untuk menjalankan migrasi terbaru <br>
   ```
     php artisan migrate
   ```
+  ![Screenshot token](../Laprak8/16.PNG) <br>
+  
   <tb>6. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut. Salinlah token yang didapat ke notepad<br>
   ```
     {
@@ -323,9 +351,10 @@
       "password": "wanderer"
     }
   ```
+  ![Screenshot token](../Laprak8/17.PNG) <br>
   
 * ## Authorization
-  Authorization merupakan proses pemberian hak istimewa yang dilakukan setelah proses authentication. Setelah pengguna diidentifikasi pada proses authentication, authorization akan memberikan hak istimewa dan tindakan yang diizinkan kepada pengguna yang ditentukan. <br>
+  Authorization merupakan proses pemberian hak istimewa yang dilakukan setelah proses authentication. Setelah pengguna diidentifikasi pada proses authentication, authorization akan memberikan hak istimewa dan tindakan yang diizinkan kepada pengguna yang ditentukan. <br><br>
   <tb>1. Buatlah file ```Authorization.php``` pada folder ```App/Http/Middleware``` dan isilah dengan baris berikut<br>
   ```
     <?php
@@ -366,6 +395,8 @@
           }
       }
   ```
+  ![Screenshot authorization](../Laprak8/18.PNG) <br>
+  
   <tb>2. Tambahkan middleware yang baru dibuat pada ```bootstrap/app.php```.<br>
   ```
     /*
@@ -387,6 +418,8 @@
       'auth' => App\Http\Middleware\Authorization::class, //
     ]);
   ```
+  ![Screenshot authorization](../Laprak8/19.PNG) <br>
+  
   <tb>3. Buatlah fungsi ```home()``` pada ```HomeController.php```<br>
   ```
     <?php
@@ -410,6 +443,8 @@
       }
     }
   ```
+  ![Screenshot authorization](../Laprak8/20.PNG) <br>
+  
   <tb>4. Tambahkan baris berikut pada ```routes/web.php```<br>
   ```
     <?php
@@ -419,4 +454,7 @@
     $router->get('/home', ['middleware' => 'auth','uses' => 'HomeController@home']); //
     ...
   ```
+  ![Screenshot authorization](../Laprak8/21.PNG) <br>
+  
   <tb>5. Jalankan aplikasi pada endpoint ```/home``` dengan melampirkan nilai token yang didapat setelah login pada header<br>
+  ![Screenshot authorization](../Laprak8/22.PNG) <br>
