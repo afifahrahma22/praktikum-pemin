@@ -26,8 +26,7 @@
         */
 
         protected $fillable = [
-            'name', 'email', 'password',
-            'token' //
+            'name', 'email', 'password'
         ];
 
         /**
@@ -207,8 +206,217 @@
       }
 
   ```
-  <tb>3. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut <br>
-  <tb>3. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut <br>
-  <tb>3. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut <br>
-  <tb>3. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut <br>
+  <tb>3. Tambahkan atribut token di ```$fillable``` pada ```User.php``` <br>
+  ```
+    <?php
+
+    namespace App\Models;
+    use Illuminate\Database\Eloquent\Model;
+    class User extends Model
+
+    {
+        /**
+        * The attributes that are mass assignable.
+        *
+        * @var array
+        */
+
+        protected $fillable = [
+            'name', 'email', 'password',
+            'token' //
+        ];
+
+        /**
+        * The attributes excluded from the model's JSON form.
+        *
+        * @var array
+        */
+
+        protected $hidden = [];
+    }
+  ```
+  <tb>4. Tambahkan baris berikut pada file ```AuthController.php``` <br>
+  ```
+    <?php
+
+    namespace App\Http\Controllers;
+    use App\Models\User;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Hash;
+    use Illuminate\Support\Str;
+
+    class AuthController extends Controller
+    {
+        /**
+        * Create a new controller instance.
+        *
+        * @return void
+        */
+        public function __construct()
+        {
+        //
+        }
+
+        public function register(Request $request)
+        {
+            $name = $request->name;
+            $email = $request->email;
+            $password = Hash::make($request->password);
+
+            $user = User::create([
+                'name' => $name,
+                'email' => $email,
+                'password' => $password
+            ]);
+            
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'new user created',
+                'data' => [
+                    'user' => $user,
+                ]
+            ],200);
+        }
+
+        public function login(Request $request)
+        {
+            $email = $request->email;
+            $password = $request->password;
+
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'status' => 'Error',
+                    'message' => 'user not exist',
+                ],404);
+            }
+
+            if (!Hash::check($password, $user->password)) {
+                return response()->json([
+                    'status' => 'Error',
+                    'message' => 'wrong password',
+                ],400);
+            }
+
+            $user->token = Str::random(36); //
+            $user->save(); //
+
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'successfully login',
+                'data' => [
+                    'user' => $user,
+                ]
+            ],200);
+        }
+    }
+  ```
+  <tb>5. Jalankan perintah di bawah untuk menjalankan migrasi terbaru <br>
+  ```
+    php artisan migrate
+  ```
+  <tb>6. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut. Salinlah token yang didapat ke notepad<br>
+  ```
+    {
+      "email": "scaramouche@fatui.org",
+      "password": "wanderer"
+    }
+  ```
+  
 * ## Authorization
+  Authorization merupakan proses pemberian hak istimewa yang dilakukan setelah proses authentication. Setelah pengguna diidentifikasi pada proses authentication, authorization akan memberikan hak istimewa dan tindakan yang diizinkan kepada pengguna yang ditentukan. <br>
+  <tb>1. Buatlah file ```Authorization.php``` pada folder ```App/Http/Middleware``` dan isilah dengan baris berikut<br>
+  ```
+    <?php
+  
+      namespace App\Http\Middleware;
+      
+      use App\Models\User;
+      use Closure;
+      
+      class Authorization
+      {
+          /**
+          * Handle an incoming request.
+          *
+          * @param \Illuminate\Http\Request $request
+          * @param \Closure $next
+          * @return mixed
+          */
+          public function handle($request, Closure $next)
+          {
+              $token = $request->header('token') ?? $request->query('token');
+              if (!$token) {
+                  return response()->json([
+                      'status' => 'Error',
+                      'message' => 'token not provided',
+                  ],400);
+              }
+      
+              $user = User::where('token', $token)->first();
+              if (!$user) {
+                  return response()->json([
+                      'status' => 'Error',
+                      'message' => 'invalid token',
+                  ],400);
+              }
+              $request->user = $user;
+              return $next($request);
+          }
+      }
+  ```
+  <tb>2. Tambahkan middleware yang baru dibuat pada ```bootstrap/app.php```.<br>
+  ```
+    /*
+    |--------------------------------------------------------------------------
+    | Register Middleware
+    |--------------------------------------------------------------------------
+    |
+    | Next, we will register the middleware with the application. These can
+    | be global middleware that run before and after each request into a
+    | route or middleware that'll be assigned to some specific routes.
+    |
+    */
+  
+    // $app->middleware([
+    // App\Http\Middleware\ExampleMiddleware::class
+    // ]);
+  
+    $app->routeMiddleware([
+      'auth' => App\Http\Middleware\Authorization::class, //
+    ]);
+  ```
+  <tb>3. Buatlah fungsi ```home()``` pada ```HomeController.php```<br>
+  ```
+    <?php
+    namespace App\Http\Controllers;
+  
+    use App\Models\User; // import model User
+    use Illuminate\Http\Request;
+    use Illuminate\Http\Response;
+  
+    class HomeController extends Controller
+    {
+    ...
+      public function home(Request $request)
+      {
+        $user = $request->user;
+    
+        return response()->json([
+          'status' => 'Success',
+          'message' => 'selamat datang ' . $user->name,
+        ],200);
+      }
+    }
+  ```
+  <tb>4. Tambahkan baris berikut pada ```routes/web.php```<br>
+  ```
+    <?php
+
+    $router->get('/', ['uses' => 'HomeController@index']);
+    $router->get('/hello', ['uses' => 'HomeController@hello']);
+    $router->get('/home', ['middleware' => 'auth','uses' => 'HomeController@home']); //
+    ...
+  ```
+  <tb>5. Jalankan aplikasi pada endpoint ```/home``` dengan melampirkan nilai token yang didapat setelah login pada header<br>
