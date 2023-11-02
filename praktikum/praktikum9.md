@@ -34,11 +34,15 @@
         ...
       }
    ```
-   
+   ![Screenshot penyesuaian](../Laprak9/1.PNG) <br>
    <tb>2. Jalankan perintah di bawah untuk memperbaharui migrasi dan menghapus data yang lama<br>
    ```
      php artisan migrate:fresh
    ```
+   ![Screenshot penyesuaian database](../Laprak9/2.PNG) <br>
+
+   ***Hasil pada PHPMyAdmin setelah di-migrate***
+  ![Screenshot penyesuaian database](../Laprak9/4.PNG) <br>
    <tb>3. Jalankan aplikasi pada endpoint ```/auth/register``` dengan body berikut<br>
    ```
      {
@@ -47,7 +51,10 @@
       "password": "wanderer"
     }
    ```
-   
+   ![Screenshot penyesuaian database](../Laprak9/5.PNG) <br>
+   ***Hasil pada PHPMyAdmin***
+   ![Screenshot penyesuaian database](../Laprak9/11.PNG) <br>
+
 * ## JWT Manual
   <tb>1. Tambahkan ketiga fungsi berikut pada ```AuthController.php```<br>
   ```
@@ -93,6 +100,8 @@
       }
     }
   ```
+  ![Screenshot JWT Manual](../Laprak9/6.PNG) <br>
+  
   <tb>2. Lakukan perubahan pada fungsi login<br>
   ```
     <?php
@@ -154,6 +163,8 @@
       ...
     }
   ```
+  ![Screenshot JWT Manual](../Laprak9/7.PNG) <br>
+  
   <tb>3. Tambahkan keempat fungsi berikut pada ```Middleware/Authorization.php```<br>
   ```
     <?php
@@ -199,6 +210,8 @@
       }
     }
   ```
+  ![Screenshot JWT Manual](../Laprak9/8.PNG) <br>
+  
   <tb>4. Lakukan perubahan pada fungsi handle<br>
   ```
     <?php
@@ -282,6 +295,8 @@
         ...
     }
   ```
+  ![Screenshot JWT Manual](../Laprak9/9.PNG) <br>
+  
   <tb>5. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut. Salinlah token yang didapat ke notepad<br>
   ```
     {
@@ -289,17 +304,25 @@
       "password": "wanderer"
     }
   ```
+  ![Screenshot JWT Manual](../Laprak9/10.PNG) <br>
+  
   <tb>6. Jalankan aplikasi pada endpoint ```/home``` dengan melampirkan nilai token yang didapat setelah login pada header<br>
+  ![Screenshot JWT Manual](../Laprak9/12.PNG) <br>
   
 * ## JWT Library
   <tb>1. Lakukan generate jwt key secara online menggunakan website ___Djecrety ― Django Secret Key Generator___ <br>
   >[!NOTE]
   >Setelah mendapatkan secret, masukkan secret key tersebut pada file ```.env``` dengan membuat variable baru bernama ```JWT_SECRET```
+
+  ![Screenshot JWT Library](../Laprak9/13.PNG) <br>
+  ![Screenshot JWT Library](../Laprak9/14.PNG) <br>
   
   <tb>2. Lakukan instalasi package jwt firebase dengan menggunakan command berikut<br>
   ```
     composer require firebase/php-jwt
   ```
+  ![Screenshot JWT Library](../Laprak9/15.PNG) <br>
+  
   <tb>3. Tambahkan fungsi berikut pada file ```AuthController```<br>
   ```
     <?php
@@ -341,6 +364,8 @@
         ...
     }
   ```
+  ![Screenshot JWT Library](../Laprak9/16.PNG) <br>
+  
   <tb>4. Lakukan perubahan pada fungsi login menjadi seperti berikutr<br>
   ```
     <?php
@@ -391,6 +416,8 @@
       }
     }
   ```
+  ![Screenshot JWT Library](../Laprak9/17.PNG) <br>
+  
   <tb>5. Buatlah file ```JwtMiddleware.php``` dan isikan baris code berikut<br>
   ```
     <?php
@@ -437,16 +464,22 @@
       }
     }
   ```
+  ![Screenshot JWT Library](../Laprak9/18.PNG) <br>
+  
   <tb>6. Daftarkan middleware yang telah dibuat pada ```bootstrap/app.php```<br>
   ```
     $app->routeMiddleware([
       'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
     ]);
   ```
+  ![Screenshot JWT Library](../Laprak9/19.PNG) <br>
+  
   <tb>7. Tambahkan baris berikut pada file ```web.php```<br>
   ```
     $router->get('/home', ['middleware' => 'jwt.auth', 'uses' => 'HomeController@home']);
   ```
+  ![Screenshot JWT Library](../Laprak9/20.PNG) <br>
+  
   <tb>8. Jalankan aplikasi pada endpoint ```/auth/login``` dengan body berikut. Salinlah token yang didapat ke notepad<br>
   ```
     {
@@ -454,4 +487,7 @@
       "password": "wanderer"
     }
   ```
+  ![Screenshot JWT Library](../Laprak9/22.PNG) <br>
+  
   <tb>9. Jalankan aplikasi pada endpoint ```/home``` dengan melampirkan nilai token yang didapat setelah login pada header<br>
+  ![Screenshot JWT Library](../Laprak9/23.PNG) <br>
